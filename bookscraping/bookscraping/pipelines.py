@@ -71,3 +71,119 @@ class BookscrapingPipeline:
         
 
         return item
+
+
+
+from sqlalchemy import create_engine, Column, Integer, String, MetaData, Table
+from sqlalchemy.ext.declarative import declarative_base
+from flask_sqlalchemy import SQLAlchemy
+from flask import Flask
+
+
+app = Flask('__name__')
+
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+app.secret_key = b'_5#y2L"F4Q8zksldkjfksd/'
+db = SQLAlchemy(app)
+
+
+
+
+
+
+# Create an in-memory SQLite database engine
+#engine = create_engine('sqlite:///:memory:')
+
+# Define Table Classes
+#Base = declarative_base()
+class Books(db.Model):
+    id = db.Column(db.Integer(), primary_key=True)
+    url = db.Column(db.String(80), unique=True, nullable=False)
+    title = db.Column(db.String(120), unique=True, nullable=False)
+    product_type = db.Column(db.String(120), unique=True, nullable=False)
+    price_excl_tax = db.Column(db.Integer(), unique=False, nullable=True)
+    price_incl_tax = db.Column(db.Integer(), unique=False, nullable=False)
+    tax = db.Column(db.Integer(), unique=False, nullable=False)
+    num_reviews = db.Column(db.Integer(), unique=False, nullable=False)
+    stars = db.Column(db.Integer(), unique=False, nullable=False)
+    description = db.Column(db.String(900), unique=False, nullable=False)
+    price = db.Column(db.Integer(), unique=False, nullable=False)
+
+        
+    with app.app_context():
+            db.create_all()
+    def __repr__(self):
+                #db.create_all()
+                #db.commit()
+        return '<Booking %r>' % self.url, self.title, self.product_type, self.price_excl_tax, self.price_incl_tax,self.tax , self.num_reviews ,self.stars, self.description, self.price
+                #db.create_all()
+                #db.commit()
+        
+class save_to_sqlite():
+   # __tablename__ = 'Books'
+
+
+    #custom_id = Column(Integer, primary_key=True)
+    #url = Column(String, unique=True)
+    #title = Column(String, unique=True)
+    #product_type = Column(String, unique=False)
+    #price_excl_tax = Column(Integer, unique=False)
+    #price_incl_tax = Column(Integer, unique=False)
+    #tax = Column( Integer , unique=False)
+    #availablity = Column(Integer, unique=False)
+    #num_reviews = Column(Integer, unique=False)
+    #stars = Column(Integer, unique=False)
+   # description = Column(String, unique=True)
+   # price = Column(Integer, unique=False)
+    
+   
+    #Base.metadata.create_all(engine)
+
+
+    def process_items(self, item, spider):
+      
+
+    # todb = Books(url=url,title=title,product_type=product_type,price_excl_tax=price_excl_tax,price_incl_tax=price_incl_tax,tax=tax, availablity=availablity, num_review=num_review,stars=stars,description=description,price=price)
+        #with engine.connect() as conn:
+         #   result = self.curl.conn.execute(
+          #  add(Books),
+           # [
+            #url : item['url'],
+            #title = item['title'],
+            #product_type = item['product_type'],
+            #price_excl_tax = item['price_excl_tax'],
+            #price_incl_tax = item['price_incl_tax'],
+            #tax = item['tax'],
+            #availablity = item['availablity'],
+            #num_review = item['num_review'],
+            #stars = item['stars'],
+            #description = item['description'],
+            #price = item['price'],
+            #]
+            #)
+        #self.conn.commit()
+        #return item 
+        url = item['url'],
+        title = item['title'],
+        product_type = item['product_type'],
+        price_excl_tax = item['price_excl_tax'],
+        price_incl_tax = item['price_incl_tax'],
+        tax = item['tax'],
+        availablity = item['availablity'],
+        num_review = item['num_review'],
+        stars = item['stars'],
+        description = item['description'],
+        price = item['price'],
+            
+        upload =  Books(url=url,title=title,product_type=product_type,price_excl_tax=price_excl_tax,price_incl_tax=price_incl_tax,tax=tax, availablity=availablity, num_review=num_review,stars=stars,description=description,price=price)
+		#upload = Books( name = name, email=email, phone_num=phone_num, case = case ,message = message)
+        db.session.add(upload)
+        db.session.commit()
+		#flash('You booked successfully ')
+        return item
+
+
+
+    def close_spider(self, spider):
+        self.close()
+        
