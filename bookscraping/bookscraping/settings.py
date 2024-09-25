@@ -63,8 +63,8 @@ ROBOTSTXT_OBEY = True
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
 ITEM_PIPELINES = {
-    "bookscraping.pipelines.BookscrapingPipeline": 300,
-    "bookscraping.pipelines.save_to_sqlite": 400,
+    "bookscraping.pipelines.BookscraperPipeline": 300,
+    "bookscraping.pipelines.SaveToMySQLPipeline": 400,
 
 }
 
